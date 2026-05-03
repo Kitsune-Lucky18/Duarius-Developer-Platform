@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Kitsune Hub Executor</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <span class="logo-icon">🦊</span>
+                <span class="logo-text">Kitsune Hub</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="overview">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </a>
+                <a href="#" class="nav-item" data-page="projects">
+                    <span class="nav-icon">📁</span>
+                    <span>Projects</span>
+                </a>
+                <a href="#" class="nav-item" data-page="keys">
+                    <span class="nav-icon">🔑</span>
+                    <span>Key System</span>
+                </a>
+                <a href="#" class="nav-item" data-page="hosting">
+                    <span class="nav-icon">🚀</span>
+                    <span>Hosting</span>
+                </a>
+                <a href="#" class="nav-item" data-page="analytics">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="user-avatar" id="userAvatar">K</div>
+                    <div class="user-info">
+                        <span class="user-name" id="userName">User</span>
+                        <span class="user-plan" id="userPlan">Free Plan</span>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn" title="Logout">🚪</button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                <h2 class="page-title" id="pageTitle">Overview</h2>
+                <div class="topbar-actions">
+                    <span class="topbar-date" id="topbarDate"></span>
+                    <a href="../index.html" class="btn btn-sm btn-ghost">← Back to Site</a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- OVERVIEW PAGE -->
+                <div class="page active" id="page-overview">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Total Executions</span>
+                                <span class="stat-badge green">+12.5%</span>
+                            </div>
+                            <div class="stat-value" id="statExecutions">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Active Users</span>
+                                <span class="stat-badge green">+8.3%</span>
+                            </div>
+                            <div class="stat-value" id="statUsers">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Active Keys</span>
+                                <span class="stat-badge yellow">3/100</span>
+                            </div>
+                            <div class="stat-value" id="statKeys">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Avg Response</span>
+                                <span class="stat-badge green">-2ms</span>
+                            </div>
+                            <div class="stat-value" id="statLatency">0ms</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Executions (7 days)</h3>
+                            <div class="chart-tabs">
+                                <button class="chart-tab active" data-range="7d">7D</button>
+                                <button class="chart-tab" data-range="30d">30D</button>
+                                <button class="chart-tab" data-range="90d">90D</button>
+                            </div>
+                        </div>
+                        <canvas id="executionsChart" height="200"></canvas>
+                    </div>
+
+                    <div class="recent-section">
+                        <h3>Recent Executions</h3>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Project</th>
+                                        <th>Executor</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentExecutions"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROJECTS PAGE -->
+                <div class="page" id="page-projects">
+                    <div class="page-header">
+                        <h3>Your Projects</h3>
+                        <button class="btn btn-primary btn-sm" id="newProjectBtn">+ New Project</button>
+                    </div>
+                    <div class="projects-grid" id="projectsGrid"></div>
+                </div>
+
+                <!-- KEYS PAGE -->
+                <div class="page" id="page-keys">
+                    <div class="page-header">
+                        <h3>Key Management</h3>
+                        <button class="btn btn-primary btn-sm" id="newKeyBtn">+ Generate Key</button>
+                    </div>
+                    <div class="key-stats">
+                        <div class="key-stat">
+                            <span class="key-stat-label">Active Keys</span>
+                            <span class="key-stat-value" id="activeKeyCount">0</span>
+                        </div>
+                        <div class="key-stat">
+                            <span class="key-stat-label">Total Generated</span>
+                            <span class="key-stat-value" id="totalKeyCount">0</span>
+                        </div>
+                        <div class="key-stat">
+                            <span class="key-stat-label">Revoked</span>
+                            <span class="key-stat-value" id="revokedKeyCount">0</span>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Project</th>
+                                    <th>Created</th>
+                                    <th>Expires</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="keysTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- HOSTING PAGE -->
+                <div class="page" id="page-hosting">
+                    <div class="page-header">
+                        <h3>Script Hosting</h3>
+                        <button class="btn btn-primary btn-sm" id="newVersionBtn">+ New Version</button>
+                    </div>
+                    <div class="hosting-list" id="hostingList"></div>
+                </div>
+
+                <!-- ANALYTICS PAGE -->
+                <div class="page" id="page-analytics">
+                    <div class="analytics-grid">
+                        <div class="chart-container">
+                            <h3>Executor Distribution</h3>
+                            <canvas id="executorChart" height="250"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Geographic Distribution</h3>
+                            <canvas id="geoChart" height="250"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Retention Rate</h3>
+                        <canvas id="retentionChart" height="180"></canvas>
+                    </div>
+                    <div class="analytics-breakdown">
+                        <div class="breakdown-card">
+                            <h4>Top Executors</h4>
+                            <div id="topExecutors"></div>
+                        </div>
+                        <div class="breakdown-card">
+                            <h4>Top Countries</h4>
+                            <div id="topCountries"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SETTINGS PAGE -->
+                <div class="page" id="page-settings">
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h3>Profile Settings</h3>
+                            <div class="form-group">
+                                <label>Display Name</label>
+                                <input type="text" id="settingName" placeholder="Your name">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="settingEmail" placeholder="you@example.com" disabled>
+                            </div>
+                            <button class="btn btn-primary btn-sm" id="saveProfileBtn">Save Changes</button>
+                        </div>
+                        <div class="settings-section">
+                            <h3>Plan & Billing</h3>
+                            <div class="plan-display">
+                                <div class="plan-info">
+                                    <span class="plan-name" id="currentPlan">Free Plan</span>
+                                    <span class="plan-price" id="currentPlanPrice">$0/month</span>
+                                </div>
+                                <button class="btn btn-primary btn-sm" id="upgradeBtn">Upgrade to Pro</button>
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <h3>Notifications</h3>
+                            <div class="toggle-group">
+                                <label class="toggle">
+                                    <input type="checkbox" id="notifEmail">
+                                    <span class="toggle-label">Email notifications</span>
+                                </label>
+                                <label class="toggle">
+                                    <input type="checkbox" id="notifWebhook">
+                                    <span class="toggle-label">Webhook notifications</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-section danger">
+                            <h3>Danger Zone</h3>
+                            <button class="btn btn-danger btn-sm" id="deleteAccountBtn">Delete Account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="projectModal">
+            <div class="modal-header">
+                <h3>Create New Project</h3>
+                <button class="modal-close" id="modalClose">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Project Name</label>
+                    <input type="text" id="projectName" placeholder="My awesome script">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="projectDesc" rows="3" placeholder="What does your script do?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Ad Gateway (optional)</label>
+                    <select id="projectGateway">
+                        <option value="none">None</option>
+                        <option value="lootlabs">Lootlabs</option>
+                        <option value="linkvertise">Linkvertise</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary btn-full" id="createProjectBtn">Create Project</button>
+            </div>
+        </div>
+
+        <div class="modal" id="keyModal">
+            <div class="modal-header">
+                <h3>Generate New Key</h3>
+                <button class="modal-close" id="modalClose2">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Project</label>
+                    <select id="keyProject"></select>
+                </div>
+                <div class="form-group">
+                    <label>Duration</label>
+                    <select id="keyDuration">
+                        <option value="1">1 hour</option>
+                        <option value="24">24 hours</option>
+                        <option value="168">7 days</option>
+                        <option value="720">30 days</option>
+                    </select>
+                </div>
+                <div class="generated-key" id="generatedKey" style="display:none">
+                    <p>Key generated!</p>
+                    <code id="keyValue"></code>
+                    <button class="btn btn-sm btn-ghost" id="copyKeyBtn">📋 Copy</button>
+                </div>
+                <button class="btn btn-primary btn-full" id="generateKeyBtn">Generate Key</button>
+            </div>
+        </div>
+
+        <div class="modal" id="versionModal">
+            <div class="modal-header">
+                <h3>Push New Version</h3>
+                <button class="modal-close" id="modalClose3">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Project</label>
+                    <select id="versionProject"></select>
+                </div>
+                <div class="form-group">
+                    <label>Version Tag</label>
+                    <input type="text" id="versionTag" placeholder="v1.0.0">
+                </div>
+                <div class="form-group">
+                    <label>Script Content</label>
+                    <textarea id="versionScript" rows="8" placeholder="paste your script here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Changelog</label>
+                    <input type="text" id="versionChangelog" placeholder="What changed?">
+                </div>
+                <button class="btn btn-primary btn-full" id="pushVersionBtn">Push Version</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
